@@ -1,5 +1,4 @@
-use asmbuilder::symphony_playground::*;
-
+use asmbuilder::symphony_playground::test;
 fn main() {
-    test()
+    test();
 }

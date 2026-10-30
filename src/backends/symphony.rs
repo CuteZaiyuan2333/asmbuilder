@@ -177,7 +177,7 @@ impl Symphony{
                 Ok(match breg {
                     Breg::Reg(_) => op.build(false),
                     Breg::Imd(_) => op.build(true),
-                    _ => return Err(()),
+                    Breg::Label(_) => op.build(true),
                 } + " " + &breg.build())
             }
             SymphonyISA::Load(op, dreg, addr_reg) =>{

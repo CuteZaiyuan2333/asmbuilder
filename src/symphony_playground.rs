@@ -7,7 +7,7 @@ use crate::backends::symphony::Regs::*;
 use crate::backends::symphony::SymphonyISA::*;
 
 const MAIN:crate::Label = crate::Label("main");
-const ABCDE:crate::Label = crate::Label("main");
+const ABCDE:crate::Label = crate::Label("abcde");
 
 pub fn test(){
     
