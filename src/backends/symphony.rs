@@ -1,4 +1,4 @@
-use crate::Backend;
+use crate::{Backend, Label};
 
 pub struct Symphony(pub Vec<SymphonyISA>);
 
@@ -46,12 +46,14 @@ impl Regs{
 pub enum Breg{
     Reg(Regs),
     Imd(ImdNumber),
+    Label(Label)
 }
 impl Breg {
     pub fn build(self) -> String{
         match self {
             Self::Reg(reg) => reg.build(),
             Self::Imd(imd) => imd.0.to_string(),
+            Self::Label(label) => label.0.to_string(),
         }
     }
 }
@@ -161,30 +163,35 @@ impl Symphony{
                 Ok(match breg{
                     Breg::Reg(_) => "out ",
                     Breg::Imd(_) => "outi ",
+                    _ => return Err(()),
                 }.to_string() + &breg.build())
             }
             SymphonyISA::ALU(op, dreg, areg, breg) =>{
                 Ok(match breg {
                     Breg::Reg(_) => op.build(false),
                     Breg::Imd(_) => op.build(true),
+                    _ => return Err(()),
                 } + " " + &dreg.build() + ", " + &areg.build() + ", " + &breg.build())
             }
             SymphonyISA::JUMP(op, breg) =>{
                 Ok(match breg {
                     Breg::Reg(_) => op.build(false),
                     Breg::Imd(_) => op.build(true),
+                    _ => return Err(()),
                 } + " " + &breg.build())
             }
             SymphonyISA::Load(op, dreg, addr_reg) =>{
                 Ok(match addr_reg {
                     Breg::Reg(_) => op.build(false),
                     Breg::Imd(_) => op.build(true),
+                    _ => return Err(()),
                 } + " " + &dreg.build() + ", " + &addr_reg.build())
             }
             SymphonyISA::Store(op, addr_reg, value_reg) =>{
                 Ok(match value_reg {
                         Breg::Reg(_) => op.build(false),
                         Breg::Imd(_) => op.build(true),
+                        _ => return Err(()),
                 } + " " + &addr_reg.build() + ", " + &value_reg.build())
             }
         };
