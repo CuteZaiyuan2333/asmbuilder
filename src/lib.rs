@@ -6,7 +6,7 @@ pub trait Backend: Default{
     fn build_asm_body(self) -> Result<String, ()>;
 }
 
-#[derive(Clone)]
+#[derive(Clone, Copy)]
 pub struct Label(pub &'static str);
 
 pub struct Block<B: Backend>{
