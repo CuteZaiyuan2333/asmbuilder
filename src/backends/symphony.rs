@@ -73,7 +73,7 @@ impl AluOp{
             Self::Lsl => "lsl",
             Self::Lsr => "lsr",
             Self::Asr => "asr",
-            Self::Cmp => "smp",
+            Self::Cmp => "cmp",
         }.to_string();
         if is_imd{
             name + "i"
@@ -88,8 +88,8 @@ pub enum CondOp{
     Jmp, Je, Jne, Jb, Jae, Jbe, Ja, Jl, Jge, Jle, Jg,
 }
 impl CondOp{
-    pub fn build(self) -> String{
-        match self {
+    pub fn build(self, is_imd: bool) -> String{
+        let name = match self {
             Self::Jmp => "jmp",
             Self::Je => "je",
             Self::Jne => "jne",
@@ -100,8 +100,13 @@ impl CondOp{
             Self::Jl => "jl",
             Self::Jge => "jge",
             Self::Jle => "jle",
-            Self::Jg => "jf"
-        }.to_string()
+            Self::Jg => "jg"
+        }.to_string();
+        if is_imd{
+            name + "i"
+        }else{
+            name
+        }
     }
 }
 
@@ -166,9 +171,9 @@ impl Symphony{
             }
             SymphonyISA::JUMP(op, breg) =>{
                 Ok(match breg {
-                    Breg::Reg(_) => op.build(),
-                    Breg::Imd(_) => op.build() + "i",
-                } + &breg.build())
+                    Breg::Reg(_) => op.build(false),
+                    Breg::Imd(_) => op.build(true),
+                } + " " + &breg.build())
             }
             SymphonyISA::Load(op, dreg, addr_reg) =>{
                 Ok(match addr_reg {
